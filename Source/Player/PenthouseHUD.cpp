@@ -3,12 +3,12 @@
 
 #include "PenthouseHUD.h"
 
-const TArray<AUInteractableTrigger*> APenthouseHUD::GetLoadedSimpleInteractors_Implementation() const
+const TArray<AInteractableTrigger*> APenthouseHUD::GetLoadedSimpleInteractors_Implementation() const
 {
 	return LoadedInteractors;
 }
 
-bool APenthouseHUD::AddSimpleInteractor_Implementation(AUInteractableTrigger* Trigger)
+bool APenthouseHUD::AddSimpleInteractor_Implementation(AInteractableTrigger* Trigger)
 {
 	if (LoadedInteractors.Contains(Trigger))
 	{
@@ -18,7 +18,7 @@ bool APenthouseHUD::AddSimpleInteractor_Implementation(AUInteractableTrigger* Tr
 	return true;
 }
 
-bool APenthouseHUD::RemoveSimpleInteractor_Implementation(AUInteractableTrigger* Trigger)
+bool APenthouseHUD::RemoveSimpleInteractor_Implementation(AInteractableTrigger* Trigger)
 {
 	if (!LoadedInteractors.Contains(Trigger))
 	{

@@ -9,6 +9,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Components/SceneCaptureComponent2D.h"
 #include "Engine/LocalPlayer.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -26,7 +27,7 @@ APenthouseCharacter::APenthouseCharacter()
 	FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
 	FirstPersonCameraComponent->SetRelativeLocation(FVector(-10.f, 0.f, 60.f)); // Position the camera
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
-
+	
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	Mesh1P->SetOnlyOwnerSee(true);
@@ -68,8 +69,13 @@ void APenthouseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 }
 
 
+
 void APenthouseCharacter::Move(const FInputActionValue& Value)
 {
+	if (bBlockMovement)
+	{
+		return;
+	}
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
@@ -83,6 +89,10 @@ void APenthouseCharacter::Move(const FInputActionValue& Value)
 
 void APenthouseCharacter::Look(const FInputActionValue& Value)
 {
+	if (bBlockMovement)
+	{
+		return;
+	}
 	// input is a Vector2D
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
 
@@ -93,3 +103,4 @@ void APenthouseCharacter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
 }
+

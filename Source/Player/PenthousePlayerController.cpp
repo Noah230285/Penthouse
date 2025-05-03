@@ -16,3 +16,26 @@ void APenthousePlayerController::BeginPlay()
 		Subsystem->AddMappingContext(InputMappingContext, 0);
 	}
 }
+
+void APenthousePlayerController::ApplyFreezeFlags_Implementation(const uint8 Flags)
+{
+	FreezeFlags |= Flags;
+	if (!CanPlayerMove())
+	{
+		OnPlayerFrozen.Broadcast();
+	}
+}
+
+void APenthousePlayerController::ClearFreezeFlags_Implementation(const uint8 Flags)
+{
+	FreezeFlags &= ~Flags;
+	if (CanPlayerMove())
+	{
+		OnPlayerUnFrozen.Broadcast();
+	}
+}
+
+bool APenthousePlayerController::CanPlayerMove() const
+{
+	return FreezeFlags == 0;
+}
