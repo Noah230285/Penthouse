@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InteractableTrigger.h"
 #include "UObject/Interface.h"
 #include "HUDFunctions.generated.h"
 
+class AInteractableTrigger;
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI, Blueprintable)
 class UHUDFunctions : public UInterface
@@ -23,11 +23,11 @@ class PENTHOUSE_API IHUDFunctions
 public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	const TArray<AUInteractableTrigger*> GetLoadedSimpleInteractors() const;
+	const TArray<AInteractableTrigger*> GetLoadedSimpleInteractors() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	bool RemoveSimpleInteractor(AUInteractableTrigger* Trigger);
+	bool RemoveSimpleInteractor(AInteractableTrigger* Trigger);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	bool AddSimpleInteractor(AUInteractableTrigger* Trigger);
+	bool AddSimpleInteractor(AInteractableTrigger* Trigger);
 };

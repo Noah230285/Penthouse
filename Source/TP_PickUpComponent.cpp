@@ -2,6 +2,8 @@
 
 #include "TP_PickUpComponent.h"
 
+#include "Player/PenthouseCharacter.h"
+
 UTP_PickUpComponent::UTP_PickUpComponent()
 {
 	// Setup the Sphere Collision

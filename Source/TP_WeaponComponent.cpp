@@ -2,7 +2,7 @@
 
 
 #include "TP_WeaponComponent.h"
-#include "PenthouseCharacter.h"
+#include "Player/PenthouseCharacter.h"
 #include "PenthouseProjectile.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/PlayerCameraManager.h"
