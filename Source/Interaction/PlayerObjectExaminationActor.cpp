@@ -1,71 +1,64 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PlayerObjectExaminationComponent.h"
+#include "PlayerObjectExaminationActor.h"
 
 #include "Components/SceneCaptureComponent2D.h"
 #include "Engine/World.h"
 #include "Interaction/ExaminableObjectActor.h"
 
 // Sets default values for this component's properties
-UPlayerObjectExaminationComponent::UPlayerObjectExaminationComponent()
+APlayerObjectExaminationActor::APlayerObjectExaminationActor()
 {
-	PrimaryComponentTick.bCanEverTick = true;
+	SceneCapture = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("Scene Capture"));
 	
 	ExamineChildActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("Examine Child Actor"));
-
+	ExamineChildActor->SetupAttachment(SceneCapture);
+	ExamineChildActor->SetRelativeLocation(FVector(100, 0, 0));
 }
 
 
 // Called when the game starts
-void UPlayerObjectExaminationComponent::BeginPlay()
+void APlayerObjectExaminationActor::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
-void UPlayerObjectExaminationComponent::OnRegister()
-{
-	Super::OnRegister();
-
-	ExamineChildActor->SetupAttachment(this);
-	ExamineChildActor->SetRelativeLocation(FVector(0, 100, 0));
-}
-
-
 // Called every frame
-void UPlayerObjectExaminationComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void APlayerObjectExaminationActor::TickActor(float DeltaTime, ELevelTick TickType, FActorTickFunction& ThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Super::TickActor(DeltaTime, TickType, ThisTickFunction);
 }
 
-void UPlayerObjectExaminationComponent::EnterExamineState_Implementation(
+void APlayerObjectExaminationActor::EnterExamineState_Implementation(
 	TSubclassOf<AExaminableObjectActor> ActorClass)
 {
 	AddExamineActor(ActorClass);
 }
 
-void UPlayerObjectExaminationComponent::ExitExamineState_Implementation()
+void APlayerObjectExaminationActor::ExitExamineState_Implementation()
 {
 	
 }
 
-void UPlayerObjectExaminationComponent::AddExamineActor_Implementation(TSubclassOf<AExaminableObjectActor> ActorClass)
+void APlayerObjectExaminationActor::AddExamineActor_Implementation(TSubclassOf<AExaminableObjectActor> ActorClass)
 {
 	ExamineChildActor->SetChildActorClass(ActorClass);
 	ExaminedActor = StaticCast<AExaminableObjectActor*>(ExamineChildActor->GetChildActor());
-	// for (auto Component : ExaminedActor->GetComponents())
-	// {
-	// 	if (USceneComponent* SceneComponent = Cast<USceneComponent>(Component))
-	// 	{
-	// 		SceneComponent->SetVisibility(false);
-	// 	}
-	// }
-	//
-	// ExamineChildActor->SetRelativeLocation(ExaminedActor->GetExaminationPositionOffset());
-	// ExamineChildActor->SetRelativeRotation(ExaminedActor->GetExaminationStartRotation());
+	for (auto Component : ExaminedActor->GetComponents())
+	{
+		if (UMeshComponent* Mesh = Cast<UMeshComponent>(Component))
+		{
+			Mesh->SetVisibleInSceneCaptureOnly(true);
+		}
+	}
+	SceneCapture->ShowOnlyActors.Add(ExaminedActor);
+	
+	ExamineChildActor->SetRelativeLocation(ExaminedActor->GetExaminationPositionOffset());
+	ExamineChildActor->SetRelativeRotation(ExaminedActor->GetExaminationRotationOffset());
 }
 
-void UPlayerObjectExaminationComponent::RemoveExamineActor_Implementation()
+void APlayerObjectExaminationActor::RemoveExamineActor_Implementation()
 {
 	ExaminedActor->Destroy();
 }
