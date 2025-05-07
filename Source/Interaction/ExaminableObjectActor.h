@@ -18,7 +18,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FVector ExaminationPositionOffset;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FRotator ExaminationRotationOffset;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -30,4 +32,5 @@ public:
 	virtual void TickActor(float DeltaTime, enum ELevelTick TickType, FActorTickFunction& ThisTickFunction) override;
 
 	FVector3d GetExaminationPositionOffset() const {return ExaminationPositionOffset;};
+	FRotator GetExaminationRotationOffset() const {return ExaminationRotationOffset;};
 };
